@@ -2,7 +2,7 @@ require 'sinatra'
 require 'json'
 
 get '/' do
-  'Hello world!'
+  'Hello seed!'
 end
 
 get '/seed' do
