@@ -1,5 +1,3 @@
-
-
 class Sphere
     attr_accessor :radius
     attr_accessor :color
