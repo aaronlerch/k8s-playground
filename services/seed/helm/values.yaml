@@ -6,7 +6,8 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/aaronlerch/k8s-playground/seed
-  pullPolicy: IfNotPresent
+  # pullPolicy was: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
