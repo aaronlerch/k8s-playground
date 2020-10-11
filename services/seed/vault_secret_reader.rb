@@ -46,7 +46,7 @@ class VaultSecretReader
         @role = role || service_name
 
         begin
-            auth_token = token || Vault.auth.kubernetes(role)
+            auth_token = token || Vault.auth.kubernetes(role).auth.client_token
             @client = Vault::Client.new(address: VAULT_ADDRESS, token: auth_token)
         rescue Exception => e
             puts "ERROR: Error creating Vault Client -- #{e.message}"
