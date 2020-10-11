@@ -3,3 +3,5 @@ ruby "2.7.1"
 
 gem 'thin'
 gem 'sinatra'
+gem 'vault'
+gem 'ls-trace'
