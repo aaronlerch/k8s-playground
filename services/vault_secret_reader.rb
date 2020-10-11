@@ -34,7 +34,6 @@ module Vault
 end
 
 class VaultSecretReader
-    attr_reader :client, :service_name, :role
     attr_reader :secrets
 
     # supply a token to override the k8s auth
@@ -46,7 +45,7 @@ class VaultSecretReader
         @role = role || service_name
 
         begin
-            auth_token = token || Vault.auth.kubernetes(role).auth.client_token
+            auth_token = token || Vault.auth.kubernetes(@role).auth.client_token
             @client = Vault::Client.new(address: VAULT_ADDRESS, token: auth_token)
         rescue Exception => e
             puts "ERROR: Error creating Vault Client -- #{e.message}"
@@ -82,7 +81,7 @@ class VaultSecretReader
         @secrets.each do |scope_name, scope_value|
             unless scope_value.nil?
                 scope_value.each do |secret_name, secret_value|
-                    results["#{service_name.to_s}_#{scope_name.to_s}_#{secret_name.to_s}"] = secret_value
+                    results["#{@service_name.to_s}_#{scope_name.to_s}_#{secret_name.to_s}"] = secret_value
                 end
             end
         end
