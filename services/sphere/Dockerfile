@@ -8,7 +8,7 @@ USER app-user
 WORKDIR /home/app-user/app
 
 ADD Gemfile Gemfile.lock ./
-RUN bundle install --system
+RUN bundle install
 
 ENV APP_ENV=production
 EXPOSE 4567
