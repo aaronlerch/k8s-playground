@@ -1,6 +1,6 @@
 require 'vault'
 
-VAULT_ADDRESS = ENV['VAULT_ADDR'] || 'https://vault.vault.svc:8200'
+VAULT_ADDRESS = ENV['VAULT_ADDR'] || 'http://vault.vault.svc:8200'
 SERVICE_ACCOUNT_PATH = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 
 # set the default
@@ -48,7 +48,8 @@ class VaultSecretReader
         begin
             auth_token = token || Vault.auth.kubernetes(role)
             @client = Vault::Client.new(address: VAULT_ADDRESS, token: auth_token)
-        rescue
+        rescue Exception => e
+            puts "ERROR: Error creating Vault Client -- #{e.message}"
         end
     end
 
@@ -67,8 +68,10 @@ class VaultSecretReader
                     @secrets[name] = secret.data
                 end
                 @loaded = true
+                puts "Loaded #{secret_names.length} secrets from Vault"
             end
-        rescue
+        rescue Exception => e
+            puts "ERROR: Error loading secrets from Vault -- #{e.message}"
         end
 
         return self

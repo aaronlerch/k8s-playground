@@ -28,6 +28,13 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        - name: lightstep-sidecar
+          image: lightstep/reverse-proxy:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: ls-satellite
+              containerPort: 8126
+              protocol: TCP
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

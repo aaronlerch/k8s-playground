@@ -5,10 +5,13 @@ require_relative 'vault_secret_reader'
 
 secrets = VaultSecretReader.new("seed").load
 if secrets.loaded?
-  ENV.merge!(secrets.as_env)
+  envs = secrets.as_env
+  puts "Vault secrets loaded! Loaded #{envs.keys.length} secrets"
+  ENV.merge!(envs)
 end
 
 if ENV['SEED_LIGHTSTEP_TOKEN']
+  puts "Configuring Lightstep using the retrieved SEED_LIGHTSTEP_TOKEN"
   Datadog.configure do |c|
     c.use :sinatra, { service_name: 'k8s-playground-seed' }
 
