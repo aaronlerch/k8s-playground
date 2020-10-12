@@ -67,7 +67,6 @@ class VaultSecretReader
                     @secrets[name] = secret.data
                 end
                 @loaded = true
-                puts "Loaded #{secret_names.length} secrets from Vault"
             end
         rescue Exception => e
             puts "ERROR: Error loading secrets from Vault -- #{e.message}"

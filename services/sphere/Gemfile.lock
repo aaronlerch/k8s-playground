@@ -9,6 +9,7 @@ GEM
     ls-trace (0.2.0)
       msgpack
     msgpack (1.3.3)
+    multi_json (1.15.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     rack (2.2.3)
@@ -19,6 +20,12 @@ GEM
       mustermann (~> 1.0)
       rack (~> 2.2)
       rack-protection (= 2.1.0)
+      tilt (~> 2.0)
+    sinatra-contrib (2.1.0)
+      multi_json
+      mustermann (~> 1.0)
+      rack-protection (= 2.1.0)
+      sinatra (= 2.1.0)
       tilt (~> 2.0)
     thin (1.7.2)
       daemons (~> 1.0, >= 1.0.9)
@@ -34,6 +41,7 @@ PLATFORMS
 DEPENDENCIES
   ls-trace
   sinatra
+  sinatra-contrib
   thin
   vault
 
