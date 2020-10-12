@@ -24,7 +24,7 @@ end
 if ENV['SPHERE_LIGHTSTEP_TOKEN']
   # exclude readiness and liveness checks from tracing
   Datadog::Pipeline.before_flush do |trace|
-    trace.delete_if { |span| span.name =~ /livesz|readyz/i }
+    trace.delete_if { |span| span.get_tag('sinatra.route.path') =~ /livesz|readyz/i }
   end
 
   Datadog.configure do |c|
