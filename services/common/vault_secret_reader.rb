@@ -96,7 +96,7 @@ class VaultSecretReader
         @secrets.each do |scope_name, scope_value|
             unless scope_value.nil?
                 scope_value.each do |secret_name, secret_value|
-                    results["#{@service_name.to_s}_#{scope_name.to_s}_#{secret_name.to_s}"] = secret_value
+                    results["#{scope_name.to_s}_#{secret_name.to_s}"] = secret_value
                 end
             end
         end
