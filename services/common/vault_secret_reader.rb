@@ -34,14 +34,30 @@ module Vault
 end
 
 class VaultSecretReader
+
+    class << self
+        def configure(service_name = nil)
+            secrets = VaultSecretReader.new(service_name).load
+            if secrets.loaded?
+                envs = secrets.as_env
+                puts "Loaded #{envs.keys.length} secrets from Vault"
+                ENV.merge!(envs)
+            else
+                puts "Skipped, or unable to load secrets from Vault"
+            end
+        end
+    end
+
     attr_reader :secrets
 
     # supply a token to override the k8s auth
-    def initialize(service_name, role = nil, token = nil)
+    def initialize(service_name = nil, role = nil, token = nil)
         @secrets = {}
         @loaded = false
         @client = nil
-        @service_name = service_name
+        @service_name = service_name || ENV['SERVICE_NAME']
+        raise "A service name is required for reading vault secrets, either explicitly provided or via the SERVICE_NAME env var" if @service_name.nil?
+
         @role = role || service_name
 
         begin

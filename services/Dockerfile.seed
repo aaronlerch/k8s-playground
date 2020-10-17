@@ -7,12 +7,15 @@ USER app-user
 
 WORKDIR /home/app-user/app
 
-ADD Gemfile Gemfile.lock ./
+ENV SERVICE_NAME=seed
+
+ADD ${SERVICE_NAME}/Gemfile ${SERVICE_NAME}/Gemfile.lock ./
 RUN bundle install
 
 ENV APP_ENV=production
 EXPOSE 4567
 
-COPY --chown=app-user . .
+COPY --chown=app-user common/ ../common/
+COPY --chown=app-user ${SERVICE_NAME}/. .
 
 CMD ruby app.rb

@@ -6,3 +6,4 @@ Dummy or test services used for experimentation
 This repo creates a docker image for each service it contains, currently
 
 * seed
+* sphere

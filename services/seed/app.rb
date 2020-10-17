@@ -2,43 +2,16 @@ require 'sinatra'
 require 'sinatra/quiet_logger'
 require 'json'
 require 'ddtrace'
-require_relative 'vault_secret_reader'
-
-SERVICE_NAME = 'k8s-playground-seed'
+require_relative '../common/all'
 
 set :quiet_logger_prefixes, %w(livesz readyz)
 register Sinatra::QuietLogger
 
-secrets = VaultSecretReader.new("seed").load
-if secrets.loaded?
-  envs = secrets.as_env
-  puts "Loaded #{envs.keys.length} secrets from Vault"
-  ENV.merge!(envs)
-end
-
-if ENV['SEED_LIGHTSTEP_TOKEN']
-  # exclude readiness and liveness checks from tracing
-  Datadog::Pipeline.before_flush do |trace|
-    trace.delete_if { |span| span.get_tag('sinatra.route.path') =~ /livesz|readyz/i }
-  end
-
-  Datadog.configure do |c|
-    trace_opts = { service_name: SERVICE_NAME, distributed_tracing: true }
-    c.use :sinatra, trace_opts
-    c.use :http, trace_opts
-
-    c.distributed_tracing.propagation_inject_style = [Datadog::Ext::DistributedTracing::PROPAGATION_STYLE_B3]
-    c.distributed_tracing.propagation_extract_style = [Datadog::Ext::DistributedTracing::PROPAGATION_STYLE_B3]
-
-    c.tracer tags: {
-      'lightstep.service_name' => SERVICE_NAME,
-      'lightstep.access_token' => ENV['SEED_LIGHTSTEP_TOKEN']
-    }
-  end
-end
+VaultSecretReader.configure
+Lightstep.configure ENV["#{ENV['SERVICE_NAME']}_LIGHTSTEP_TOKEN"]
 
 get '/' do
-  'Hello seed!'
+  "Hello #{ENV['SERVICE_NAME']}!"
 end
 
 get '/seed' do
