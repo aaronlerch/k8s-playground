@@ -5,11 +5,13 @@ require 'net/http'
 require 'ddtrace'
 require_relative '../common/all'
 
+VERSION = ENV['VERSION_SHA']
+
 set :quiet_logger_prefixes, %w(livesz readyz)
 register Sinatra::QuietLogger
 
 VaultSecretReader.configure
-Lightstep.configure ENV['LIGHTSTEP_TOKEN']
+Lightstep.configure(lightstep_token: ENV['LIGHTSTEP_TOKEN'], version: VERSION)
 
 set :seed_host, ENV['SEED_HOST'] || 'seed.seed.svc'
 set :seed_port, ENV['SEED_PORT'] || '80'
@@ -17,7 +19,7 @@ set :sphere_host, ENV['SPHERE_HOST'] || 'sphere.sphere.svc'
 set :sphere_port, ENV['SPHERE_PORT'] || '80'
 
 get '/' do
-  "Hello #{ENV['SERVICE_NAME']}!"
+  "Hello #{ENV['SERVICE_NAME']}! (#{VERSION})"
 end
 
 get '/bubbles' do

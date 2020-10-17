@@ -4,14 +4,16 @@ require 'json'
 require 'ddtrace'
 require_relative '../common/all'
 
+VERSION = ENV['VERSION_SHA']
+
 set :quiet_logger_prefixes, %w(livesz readyz)
 register Sinatra::QuietLogger
 
 VaultSecretReader.configure
-Lightstep.configure ENV['LIGHTSTEP_TOKEN']
+Lightstep.configure(lightstep_token: ENV['LIGHTSTEP_TOKEN'], version: VERSION)
 
 get '/' do
-  "Hello #{ENV['SERVICE_NAME']}!"
+  "Hello #{ENV['SERVICE_NAME']}! (#{VERSION})"
 end
 
 get '/seed' do

@@ -1,12 +1,12 @@
 class Lightstep
     class << self
-        def configure(lightstep_token, service_name = nil)
+        def configure(lightstep_token:, service_name: nil, version: '')
             unless lightstep_token
                 puts "Skipping lightstep configuration, no token provided"
                 return
             end
 
-            service_name ||= "k8s-playground-#{ENV['SERVICE_NAME']}"
+            service_name ||= ENV['SERVICE_NAME']
 
             # exclude standard readiness and liveness checks from tracing
             Datadog::Pipeline.before_flush do |trace|
@@ -23,7 +23,8 @@ class Lightstep
             
                 c.tracer tags: {
                   'lightstep.service_name' => service_name,
-                  'lightstep.access_token' => lightstep_token
+                  'lightstep.access_token' => lightstep_token,
+                  'service.version' => version
                 }
             end
         end

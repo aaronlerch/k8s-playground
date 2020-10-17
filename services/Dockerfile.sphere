@@ -1,4 +1,5 @@
 FROM ruby:2.7.1-alpine
+ARG COMMIT=""
 
 RUN apk add --no-cache g++ musl-dev make libstdc++
 
@@ -8,6 +9,7 @@ USER app-user
 WORKDIR /home/app-user/app
 
 ENV SERVICE_NAME=sphere
+ENV VERSION_SHA=${COMMIT}
 
 ADD ${SERVICE_NAME}/Gemfile ${SERVICE_NAME}/Gemfile.lock ./
 RUN bundle install
