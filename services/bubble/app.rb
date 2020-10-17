@@ -4,7 +4,6 @@ require 'json'
 require 'net/http'
 require 'ddtrace'
 require_relative '../common/all'
-#require_relative 'sphere'
 
 set :quiet_logger_prefixes, %w(livesz readyz)
 register Sinatra::QuietLogger
@@ -12,6 +11,8 @@ register Sinatra::QuietLogger
 VaultSecretReader.configure
 Lightstep.configure ENV['LIGHTSTEP_TOKEN']
 
+set :seed_host, ENV['SEED_HOST'] || 'seed.seed.svc'
+set :seed_port, ENV['SEED_PORT'] || '80'
 set :sphere_host, ENV['SPHERE_HOST'] || 'sphere.sphere.svc'
 set :sphere_port, ENV['SPHERE_PORT'] || '80'
 
@@ -21,18 +22,24 @@ end
 
 get '/bubbles' do
     # get a bunch of spheres which are collectively bubbles, and give each one a coordinate
-    "coming soon!"
+    
+    # how many bubbles to create?
+    uri = URI::HTTP.build(host: settings.seed_host, port: settings.seed_port, path: '/seed', query: 'start=5&stop=20')
+    response = Net::HTTP.get(uri)
+    data = JSON.parse(response)
+    count = data['result'].to_i
 
-    # build a sphere response
-    # uri = URI::HTTP.build(host: settings.seed_host, port: settings.seed_port, path: '/seed', query: 'start=5&stop=100')
-    # response = Net::HTTP.get(uri)
-    # data = JSON.parse(response)
-    # radius = data['result'].to_i
+    bubbles = []
 
-    # s = Sphere.new(radius)
+    uri = URI::HTTP.build(host: settings.sphere_host, port: settings.sphere_port, path: '/sphere')
+    count.times do
+        response = Net::HTTP.get(uri)
+        sphere_data = JSON.parse(response)
+        bubbles << sphere_data
+    end
 
-    # content_type :json
-    # s.to_h.to_json
+    content_type :json
+    bubbles.to_json
 end
 
 get '/livesz' do
