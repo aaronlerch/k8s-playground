@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+ruby "2.7.1"
+
+gem 'thin'
+gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'vault'
+gem 'ls-trace'
