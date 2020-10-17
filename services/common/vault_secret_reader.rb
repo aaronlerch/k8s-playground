@@ -58,7 +58,7 @@ class VaultSecretReader
         @service_name = service_name || ENV['SERVICE_NAME']
         raise "A service name is required for reading vault secrets, either explicitly provided or via the SERVICE_NAME env var" if @service_name.nil?
 
-        @role = role || service_name
+        @role = role || @service_name
 
         begin
             auth_token = token || Vault.auth.kubernetes(@role).auth.client_token
