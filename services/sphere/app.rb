@@ -10,7 +10,7 @@ set :quiet_logger_prefixes, %w(livesz readyz)
 register Sinatra::QuietLogger
 
 VaultSecretReader.configure
-Lightstep.configure ENV["#{ENV['SERVICE_NAME']}_LIGHTSTEP_TOKEN"]
+Lightstep.configure ENV['LIGHTSTEP_TOKEN']
 
 set :seed_host, ENV['SEED_HOST'] || 'seed.seed.svc'
 set :seed_port, ENV['SEED_PORT'] || '80'

@@ -10,7 +10,7 @@ set :quiet_logger_prefixes, %w(livesz readyz)
 register Sinatra::QuietLogger
 
 VaultSecretReader.configure
-Lightstep.configure ENV["#{ENV['SERVICE_NAME']}_LIGHTSTEP_TOKEN"]
+Lightstep.configure ENV['LIGHTSTEP_TOKEN']
 
 set :sphere_host, ENV['SPHERE_HOST'] || 'sphere.sphere.svc'
 set :sphere_port, ENV['SPHERE_PORT'] || '80'

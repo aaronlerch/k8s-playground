@@ -8,7 +8,7 @@ set :quiet_logger_prefixes, %w(livesz readyz)
 register Sinatra::QuietLogger
 
 VaultSecretReader.configure
-Lightstep.configure ENV["#{ENV['SERVICE_NAME']}_LIGHTSTEP_TOKEN"]
+Lightstep.configure ENV['LIGHTSTEP_TOKEN']
 
 get '/' do
   "Hello #{ENV['SERVICE_NAME']}!"
